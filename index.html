@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Disiplin SMAN 1 Magetan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-red: #991b1b; /* Dark Red */
+            --accent-red: #dc2626;  /* Bright Red */
+            --soft-red: #fef2f2;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fff1f1;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid #fecaca;
+        }
+
+        .header-gradient {
+            background: linear-gradient(135deg, var(--primary-red) 0%, #7f1d1d 100%);
+        }
+
+        .violation-item {
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .violation-item:hover {
+            transform: translateX(4px);
+            border-left-color: var(--accent-red);
+            background-color: var(--soft-red);
+        }
+
+        .badge-ringan { background-color: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+        .badge-sedang { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+        .badge-berat { background-color: #7f1d1d; color: #ffffff; border: 1px solid #450a0a; }
+
+        /* Loading Spinner */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--accent-red);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-red {
+            background-color: var(--accent-red);
+            transition: all 0.3s;
+        }
+        .btn-red:hover {
+            background-color: var(--primary-red);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .school-logo {
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+        .school-logo:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 overflow-hidden rounded-2xl shadow-xl flex flex-col md:flex-row items-stretch">
+            <div class="header-gradient p-6 text-white flex-1 flex items-center gap-5 border-b-4 border-yellow-500 md:border-b-0 md:border-r-4">
+                <div class="bg-white p-2 rounded-xl shadow-inner shrink-0">
+                    <img src="https://smasa-magetan.sch.id/wp-content/uploads/2023/06/LOGO-SMA-NEGERI-1-MAGETAN-258x300.png" 
+                         alt="Logo SMAN 1 Magetan" 
+                         class="h-16 w-auto school-logo"
+                         onerror="this.src='https://via.placeholder.com/100?text=SMASA'">
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold uppercase tracking-tight leading-tight">E-Disiplin SMAN 1 Magetan</h1>
+                    <p class="text-red-100 text-sm font-medium">Sistem Keamanan & Kedisiplinan Siswa</p>
+                </div>
+            </div>
+            <div class="bg-white p-6 flex flex-col justify-center items-end">
+                <p id="currentDate" class="text-sm font-bold text-red-900"></p>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping"></span>
+                    <p class="text-xs font-black text-red-600 uppercase tracking-widest">Sistem Terkoneksi</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Form Identitas -->
+                <div class="glass-card p-6 rounded-2xl shadow-md border-t-4 border-red-800">
+                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-red-900">
+                        <i class="fas fa-user-edit"></i> Identitas Pelanggar
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-red-700 mb-2 uppercase tracking-wide">Nama Lengkap Siswa</label>
+                            <input type="text" id="studentName" placeholder="Masukkan nama..." class="w-full px-4 py-2.5 rounded-xl border border-red-200 focus:ring-2 focus:ring-red-500 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-red-700 mb-2 uppercase tracking-wide">Kelas</label>
+                            <select id="studentClass" class="w-full px-4 py-2.5 rounded-xl border border-red-200 focus:ring-2 focus:ring-red-500 outline-none bg-white">
+                                <option value="">Pilih Kelas...</option>
+                                <optgroup label="KELAS X" id="classX"></optgroup>
+                                <optgroup label="KELAS XI" id="classXI"></optgroup>
+                                <optgroup label="KELAS XII" id="classXII"></optgroup>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daftar Pelanggaran Interaktif -->
+                <div class="glass-card p-6 rounded-2xl shadow-md border-t-4 border-red-600">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                        <h2 class="text-lg font-bold text-red-800">
+                            <i class="fas fa-clipboard-list"></i> Jenis Pelanggaran
+                        </h2>
+                        <div class="relative w-full sm:w-64">
+                            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-red-400"></i>
+                            <input type="text" id="searchViolation" placeholder="Cari pelanggaran..." class="w-full pl-10 pr-4 py-1.5 text-sm rounded-full border border-red-200 focus:ring-2 focus:ring-red-500 outline-none">
+                        </div>
+                    </div>
+
+                    <div id="violationList" class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                        <!-- JS Render -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Rekap -->
+            <div class="space-y-6">
+                <div class="glass-card p-6 rounded-2xl shadow-xl sticky top-8 border-2 border-red-800">
+                    <h2 class="text-lg font-bold mb-4 text-red-900 uppercase flex items-center gap-2">
+                        <i class="fas fa-file-invoice-doll"></i> Rekap Skor
+                    </h2>
+                    
+                    <div id="selectedSummary" class="space-y-3 mb-6 min-h-[100px] bg-red-50/50 p-4 rounded-xl">
+                        <p class="text-center text-red-400 py-10 italic text-sm">Pilih jenis pelanggaran.</p>
+                    </div>
+
+                    <div class="border-t-2 border-dashed border-red-200 pt-6">
+                        <div class="flex justify-between items-end mb-6">
+                            <span class="text-red-700 font-bold uppercase text-xs tracking-wider">Total Akumulasi:</span>
+                            <div class="text-right">
+                                <span id="totalPoints" class="text-5xl font-black text-red-600">0</span>
+                                <span class="text-red-400 font-bold ml-1">PT</span>
+                            </div>
+                        </div>
+
+                        <button id="submitBtn" onclick="submitToCloud()" class="w-full btn-red text-white font-black py-4 rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 uppercase tracking-widest">
+                            <i class="fas fa-save text-lg"></i> Simpan Laporan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifikasi -->
+    <div id="notification" class="fixed bottom-8 left-1/2 -translate-x-1/2 transform translate-y-20 opacity-0 transition-all duration-500 z-50">
+        <div id="notifBox" class="bg-red-950 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border border-red-500/30">
+            <span id="notificationText" class="font-bold"></span>
+        </div>
+    </div>
+
+    <script>
+        // URL Google Apps Script yang baru diperbarui
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxkJdFk_mO2SgI8zjnKUSZ_K7BqqRx5TnCqrCL-AB8bV57Pw0wk8FC823kC75CnBhC2/exec"; 
+
+        const violations = [
+            { id: 1, cat: 'Ringan', title: 'Terlambat sekolah', pts: 10 },
+            { id: 2, cat: 'Ringan', title: 'Atribut tidak lengkap', pts: 10 },
+            { id: 3, cat: 'Ringan', title: 'Kaos kaki pendek', pts: 10 },
+            { id: 4, cat: 'Ringan', title: 'Rambut tidak rapi (L)', pts: 15 },
+            { id: 5, cat: 'Ringan', title: 'Tidak mengerjakan tugas', pts: 10 },
+            { id: 6, cat: 'Ringan', title: 'Buang sampah sembarangan', pts: 5 },
+            { id: 7, cat: 'Ringan', title: 'Absen upacara', pts: 10 },
+            { id: 8, cat: 'Sedang', title: 'Membolos jam pelajaran', pts: 30 },
+            { id: 9, cat: 'Sedang', title: 'Keluar sekolah tanpa izin', pts: 30 },
+            { id: 10, cat: 'Sedang', title: 'Baju dikeluarkan/tidak rapi', pts: 20 },
+            { id: 11, cat: 'Sedang', title: 'Aksesoris berlebihan', pts: 20 },
+            { id: 12, cat: 'Sedang', title: 'Main HP saat pelajaran', pts: 25 },
+            { id: 13, cat: 'Sedang', title: 'Tidak sopan ke guru', pts: 40 },
+            { id: 14, cat: 'Berat', title: 'Berkelahi/Tawuran', pts: 75 },
+            { id: 15, cat: 'Berat', title: 'Merokok di sekolah', pts: 75 },
+            { id: 16, cat: 'Berat', title: 'Membawa senjata tajam', pts: 100 },
+            { id: 17, cat: 'Berat', title: 'Bullying (Perundungan)', pts: 80 },
+            { id: 18, cat: 'Berat', title: 'Vandalisme', pts: 70 },
+            { id: 19, cat: 'Berat', title: 'Miras / Narkoba', pts: 100 }
+        ];
+
+        let selected = [];
+
+        window.onload = () => {
+            renderClasses();
+            renderViolations();
+            document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+        };
+
+        function renderClasses() {
+            const groups = ['classX', 'classXI', 'classXII'];
+            const levels = ['X', 'XI', 'XII'];
+            groups.forEach((id, idx) => {
+                let html = '';
+                for(let i=1; i<=12; i++) html += `<option value="${levels[idx]}-${i}">${levels[idx]}-${i}</option>`;
+                document.getElementById(id).innerHTML = html;
+            });
+        }
+
+        function renderViolations(filter = '') {
+            const list = document.getElementById('violationList');
+            list.innerHTML = '';
+            violations.filter(v => v.title.toLowerCase().includes(filter.toLowerCase())).forEach(v => {
+                const isSel = selected.find(s => s.id === v.id);
+                list.innerHTML += `
+                    <div class="violation-item p-4 rounded-xl border border-red-50 flex items-center justify-between bg-white shadow-sm ${isSel ? 'ring-2 ring-red-600 bg-red-50' : ''}">
+                        <div>
+                            <span class="text-[9px] uppercase font-black px-2 py-0.5 rounded ${isSel ? 'bg-red-600 text-white' : 'badge-'+v.cat.toLowerCase()}">${v.cat}</span>
+                            <h3 class="text-sm font-bold text-slate-800 mt-1">${v.title}</h3>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-xs font-black text-red-600 mb-2">${v.pts} Poin</span>
+                            <button onclick="toggle(${v.id})" class="text-[10px] px-4 py-1.5 rounded-lg font-black transition-all ${isSel ? 'bg-red-950 text-white' : 'bg-red-100 text-red-700 hover:bg-red-600 hover:text-white'}">
+                                ${isSel ? '<i class="fas fa-minus-circle"></i>' : '<i class="fas fa-plus-circle"></i>'}
+                            </button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function toggle(id) {
+            const idx = selected.findIndex(s => s.id === id);
+            if(idx > -1) selected.splice(idx, 1);
+            else selected.push(violations.find(v => v.id === id));
+            update();
+            renderViolations(document.getElementById('searchViolation').value);
+        }
+
+        function update() {
+            const sum = document.getElementById('selectedSummary');
+            if(selected.length === 0) {
+                sum.innerHTML = `<p class="text-center text-red-400 py-10 italic text-sm">Pilih jenis pelanggaran.</p>`;
+                document.getElementById('totalPoints').innerText = '0';
+                return;
+            }
+            let total = 0;
+            sum.innerHTML = selected.map(s => {
+                total += s.pts;
+                return `<div class="flex justify-between text-[11px] p-2 bg-white rounded border-l-4 border-red-600 shadow-sm mb-2">
+                    <span class="font-semibold text-slate-700">${s.title}</span><span class="font-black text-red-600">${s.pts}</span>
+                </div>`;
+            }).join('');
+            document.getElementById('totalPoints').innerText = total;
+        }
+
+        async function submitToCloud() {
+            const nama = document.getElementById('studentName').value;
+            const kelas = document.getElementById('studentClass').value;
+            const btn = document.getElementById('submitBtn');
+
+            if(!nama || !kelas || selected.length === 0) {
+                showNotif("⚠️ Lengkapi Data Siswa!", "red");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<div class="loader"></div> PROSES...`;
+
+            try {
+                const payload = {
+                    nama: nama,
+                    kelas: kelas,
+                    pelanggaran: selected.map(s => s.title).join(", "),
+                    poin: document.getElementById('totalPoints').innerText
+                };
+
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                showNotif("✅ LAPORAN BERHASIL DIKIRIM!", "green");
+                
+                // Reset form setelah pengiriman berhasil
+                setTimeout(() => {
+                    selected = [];
+                    document.getElementById('studentName').value = '';
+                    document.getElementById('studentClass').value = '';
+                    update();
+                    renderViolations();
+                }, 1000);
+            } catch (e) {
+                console.error("Error:", e);
+                showNotif("❌ Gagal mengirim data!", "red");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-save text-lg"></i> Simpan Laporan`;
+            }
+        }
+
+        function showNotif(msg, color) {
+            const n = document.getElementById('notification');
+            const b = document.getElementById('notifBox');
+            document.getElementById('notificationText').innerText = msg;
+            
+            if(color === 'green') b.style.borderColor = '#22c55e';
+            else if(color === 'red') b.style.borderColor = '#ef4444';
+            else b.style.borderColor = '#ffffff';
+
+            n.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => n.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+        document.getElementById('searchViolation').addEventListener('input', (e) => renderViolations(e.target.value));
+    </script>
+</body>
+</html>
